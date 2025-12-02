@@ -1,17 +1,12 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI!;
-
-if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable inside .env");
-}
+const MONGODB_URI = process.env.MONGODB_URI;
 
 interface MongooseCache {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
 }
 
-// Global variable taaki hot-reload pe connection maintain rahe
 let cached: MongooseCache = (global as any).mongoose;
 
 if (!cached) {
@@ -19,6 +14,11 @@ if (!cached) {
 }
 
 async function connectDB() {
+  // 👇 CHANGE: Validation check ko function ke ANDAR le aaye
+  if (!MONGODB_URI) {
+    throw new Error("Please define the MONGODB_URI environment variable inside .env");
+  }
+
   if (cached.conn) {
     return cached.conn;
   }
