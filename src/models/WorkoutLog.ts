@@ -1,0 +1,23 @@
+import mongoose, { Schema, Document, Model } from "mongoose";
+
+export interface IWorkoutLog extends Document {
+  workoutName: string;
+  date: Date;
+  duration: number;
+  exercises: any[];
+}
+
+const WorkoutLogSchema: Schema<IWorkoutLog> = new Schema(
+  {
+    workoutName: { type: String, required: true },
+    date: { type: Date, default: Date.now },
+    duration: { type: Number, required: true },
+    exercises: { type: Array, required: true },
+  },
+  { timestamps: true }
+);
+
+const WorkoutLog: Model<IWorkoutLog> =
+  mongoose.models.WorkoutLog || mongoose.model<IWorkoutLog>("WorkoutLog", WorkoutLogSchema);
+
+export default WorkoutLog;
